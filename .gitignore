@@ -1,0 +1,6 @@
+*.log
+target/
+output/
+.idea/vcs.xml
+.idea/
+*.iml
