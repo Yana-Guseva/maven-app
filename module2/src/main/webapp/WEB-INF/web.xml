@@ -1,0 +1,36 @@
+<!DOCTYPE web-app PUBLIC
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+    <servlet>
+        <servlet-name>helloServlet</servlet-name>
+        <servlet-class>servlets.HelloServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>helloServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>preServletFilter</filter-name>
+        <filter-class>servlets.filter.PreServletFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>preServletFilter</filter-name>
+        <servlet-name>helloServlet</servlet-name>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>postServletFilter</filter-name>
+        <filter-class>servlets.filter.PostServletFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>postServletFilter</filter-name>
+        <servlet-name>helloServlet</servlet-name>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>servlets.listener.MyServletContextListener</listener-class>
+    </listener>
+</web-app>
