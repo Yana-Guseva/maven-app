@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
 
 public class LoadTest {
     private static final String PATH = "http://localhost:8080/test";
-    private static final int WORKER_COUNT = 500;
+    private static final int WORKER_COUNT = 10;
 
     @Test
     public void loadTest() {
@@ -25,10 +25,13 @@ public class LoadTest {
             results.add(executorService.submit(() -> {
                         HttpURLConnection connection = null;
                         try {
+                            System.out.println(Thread.currentThread().getName() + " started to work");
                             URL url = new URL(PATH);
                             connection = (HttpURLConnection) url.openConnection();
-                            Thread.sleep(10);
-                            connection.getResponseCode();
+                            Thread.sleep(1000);
+                            int responseCode = connection.getResponseCode();
+                            System.out.println(Thread.currentThread().getName()  + " finished with code " + responseCode);
+                            return responseCode;
                         } catch (IOException | InterruptedException e) {
                             e.printStackTrace();
                         } finally {
