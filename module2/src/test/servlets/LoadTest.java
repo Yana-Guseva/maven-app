@@ -2,53 +2,46 @@ package servlets;
 
 import org.junit.Test;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class LoadTest {
-    private static final String PATH = "http://localhost:8080/test";
-    private static final int WORKER_COUNT = 10;
+    private static final String PATH = "http://localhost:8080/test?number=";
+    private static final int WORKER_COUNT = 5;
 
     @Test
-    public void loadTest() {
-        List<Future<Integer>> results = new ArrayList<>();
+    public void loadTest() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(WORKER_COUNT);
 
         for (int i = 0; i < WORKER_COUNT; i++) {
-            results.add(executorService.submit(() -> {
-                        HttpURLConnection connection = null;
-                        try {
-                            System.out.println(Thread.currentThread().getName() + " started to work");
-                            URL url = new URL(PATH);
-                            connection = (HttpURLConnection) url.openConnection();
-                            Thread.sleep(1000);
-                            int responseCode = connection.getResponseCode();
-                            System.out.println(Thread.currentThread().getName()  + " finished with code " + responseCode);
-                            return responseCode;
-                        } catch (IOException | InterruptedException e) {
-                            e.printStackTrace();
-                        } finally {
-                            if (connection != null)
-                                connection.disconnect();
-                        }
-                        return null;
-                    })
-            );
+            int param = i;
+            executorService.submit(() -> {
+                try {
+                    sendGet(param);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
-        for (Future<Integer> result : results) {
-            try {
-                result.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
+        executorService.shutdown();
+        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+    }
+
+    private void sendGet(int param) throws Exception {
+        HttpURLConnection connection = null;
+        URL url = new URL(PATH + param);
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+
+//        Thread.sleep(10);
+
+        System.out.println("Sending request to URL : " + url);
+        System.out.println("Response Code : " + connection.getResponseCode());
+
+        connection.disconnect();
     }
 }
