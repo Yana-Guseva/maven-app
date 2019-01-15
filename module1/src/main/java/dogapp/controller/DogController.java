@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
-@RequestMapping("dog")
+//@RequestMapping(value = "dog")
 public class DogController {
 
     private static final Map<UUID, Dog> dogs = new ConcurrentHashMap<>();
@@ -21,7 +21,7 @@ public class DogController {
     private static final UUID ID = UUID.fromString("8535af21-545c-4a5e-a78a-60c07b5a399a");
     private static final Dog DOG = Dog.builder().id(ID)
             .name("Rema")
-            .dateOfBirth(Date.from(LocalDate.of(2018, 9, 7).atStartOfDay(ZoneId.systemDefault()).toInstant()))
+            .dateOfBirth(LocalDate.of(2018, 9, 7))
             .height(60.)
             .weight(17.)
             .build();
@@ -30,33 +30,33 @@ public class DogController {
         dogs.put(ID, DOG);
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Dog createDog(@RequestBody Dog dog) {
-        dog.setId(UUID.randomUUID());
-        return dogs.put(dog.getId(), dog);
-    }
+//    @PostMapping
+//    public Dog createDog(@RequestBody Dog dog) {
+//        dog.setId(UUID.randomUUID());
+//        return dogs.put(dog.getId(), dog);
+//    }
 
-    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Dog getDog(@PathVariable UUID id) {
-        if (!dogs.containsKey(id)) {
+    @GetMapping("/dog/{id}")
+    public Dog getDog(@PathVariable String id) {
+        if (!dogs.containsKey(UUID.fromString(id))) {
             throw new DogNotFoundException();
         }
-        return dogs.get(id);
+        return dogs.get(UUID.fromString(id));
     }
 
-    @PutMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Dog updateDog(@PathVariable UUID id, @RequestBody Dog dog) {
-        if (!dogs.containsKey(id)) {
-            throw new DogNotFoundException();
-        }
-        return dogs.put(id, dog);
-    }
-
-    @DeleteMapping("{id}")
-    public void deleteDog(@PathVariable UUID id) {
-        if (!dogs.containsKey(id)) {
-            throw new DogNotFoundException();
-        }
-        dogs.remove(id);
-    }
+//    @PutMapping("{id}")
+//    public Dog updateDog(@PathVariable UUID id, @RequestBody Dog dog) {
+//        if (!dogs.containsKey(id)) {
+//            throw new DogNotFoundException();
+//        }
+//        return dogs.put(id, dog);
+//    }
+//
+//    @DeleteMapping("{id}")
+//    public void deleteDog(@PathVariable UUID id) {
+//        if (!dogs.containsKey(id)) {
+//            throw new DogNotFoundException();
+//        }
+//        dogs.remove(id);
+//    }
 }

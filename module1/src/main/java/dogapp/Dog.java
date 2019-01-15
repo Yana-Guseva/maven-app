@@ -3,7 +3,7 @@ package dogapp;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -11,7 +11,7 @@ import java.util.UUID;
 public class Dog {
     private UUID id;
     private String name;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private Double height;
     private Double weight;
 }
