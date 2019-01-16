@@ -10,7 +10,7 @@ public class PreServletFilter implements Filter {
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("I'm PreServletFilter");
+//        System.out.println("I'm PreServletFilter");
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }

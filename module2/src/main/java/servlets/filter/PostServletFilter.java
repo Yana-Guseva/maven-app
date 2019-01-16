@@ -10,6 +10,6 @@ public class PostServletFilter implements Filter {
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         filterChain.doFilter(servletRequest, servletResponse);
-        System.out.println("I'm PostServletFilter");
+//        System.out.println("I'm PostServletFilter");
     }
 }

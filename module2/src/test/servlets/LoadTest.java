@@ -9,26 +9,31 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class LoadTest {
-    private static final String PATH = "http://localhost:8080/test?number=";
-    private static final int WORKER_COUNT = 5;
+    private static final String PATH = "http://localhost:8080/hello?number=";
+    private static final int WORKER_COUNT = 15;
 
     @Test
-    public void loadTest() throws InterruptedException {
-        ExecutorService executorService = Executors.newFixedThreadPool(WORKER_COUNT);
-
-        for (int i = 0; i < WORKER_COUNT; i++) {
-            int param = i;
-            executorService.submit(() -> {
-                try {
-                    sendGet(param);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+    public void loadTest() {
+        try {
+            sendGet(1);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        executorService.shutdown();
-        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+//        ExecutorService executorService = Executors.newFixedThreadPool(WORKER_COUNT);
+//
+//        for (int i = 0; i < WORKER_COUNT; i++) {
+//            int param = i;
+//            executorService.submit(() -> {
+//                try {
+//                    sendGet(param);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//        }
+//
+//        executorService.shutdown();
+//        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
     }
 
     private void sendGet(int param) throws Exception {
