@@ -1,10 +1,11 @@
 package dogapp.controller;
 
-import dogapp.Dog;
+import dogapp.dto.Dog;
 import dogapp.exception.DogNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class DogController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Dog createDog(@RequestBody Dog dog) {
+    public Dog createDog(@Valid @RequestBody Dog dog) {
         dog.setId(UUID.randomUUID());
         dogs.put(dog.getId(), dog);
         return dog;
@@ -40,7 +41,7 @@ public class DogController {
     }
 
     @PutMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Dog updateDog(@PathVariable UUID id, @RequestBody Dog dog) {
+    public Dog updateDog(@PathVariable UUID id, @Valid @RequestBody Dog dog) {
         if (!dogs.containsKey(id)) {
             throw new DogNotFoundException();
         }

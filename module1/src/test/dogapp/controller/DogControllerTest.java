@@ -1,7 +1,8 @@
 package dogapp.controller;
 
-import dogapp.Dog;
 import dogapp.ErrorResponse;
+import dogapp.dto.Dog;
+import dogapp.utils.DogTestUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class DogControllerTest {
 
     @Test
     public void shouldGetDog() {
-        Dog createdDog = createDog();
+        Dog createdDog = createDog(DogTestUtils.generateDog());
 
         Dog dog = given().contentType(ContentType.JSON)
                 .when().get("{id}", createdDog.getId()).then().statusCode(HttpStatus.OK.value()).extract().body().as(Dog.class);
@@ -47,11 +48,8 @@ public class DogControllerTest {
 
     @Test
     public void shouldUpdateDog() {
-        Dog createdDog = createDog();
-
-        Dog newDog = Dog.builder().name("Belka").dateOfBirth(LocalDate.of(1955, 9, 7)).height(40.)
-                .weight(10.).build();
-
+        Dog createdDog = createDog(DogTestUtils.generateDog());
+        Dog newDog = DogTestUtils.generateDog();
         Dog updatedDog = given().body(newDog).accept(ContentType.JSON).contentType(ContentType.JSON)
                 .when().put("{id}", createdDog.getId()).then().statusCode(HttpStatus.OK.value()).extract().body().as(Dog.class);
 
@@ -61,7 +59,7 @@ public class DogControllerTest {
 
     @Test
     public void shouldDeleteDog() {
-        Dog createdDog = createDog();
+        Dog createdDog = createDog(DogTestUtils.generateDog());
 
         given().when().delete("{id}", createdDog.getId()).then().statusCode(HttpStatus.OK.value());
         given().when().get("{id}", createdDog.getId()).then().assertThat().statusCode(HttpStatus.NOT_FOUND.value());
@@ -73,6 +71,26 @@ public class DogControllerTest {
                 .when().put("{id}", UUID.randomUUID()).then().statusCode(HttpStatus.NOT_FOUND.value())
                 .extract().body().as(ErrorResponse.class);
         assertThat(errorResponse.getMessage(), equalTo(DOG_NOT_FOUND));
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenCreateInvalidDog() {
+        Dog dog = createDog(DogTestUtils.generateDog());
+        dog.setName(null);
+
+        given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
+                .when().put("{id}", dog.getId()).then().statusCode(HttpStatus.BAD_REQUEST.value()).extract().body().as(ErrorResponse.class);
+
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenUpdateInvalidDog() {
+        Dog dog = DogTestUtils.generateDog();
+        dog.setWeight(-9.);
+
+        given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
+                .when().post().then().statusCode(HttpStatus.BAD_REQUEST.value()).extract().body().as(ErrorResponse.class);
+
     }
 
     @Test
@@ -103,7 +121,7 @@ public class DogControllerTest {
         assertThat(dog1.getWeight(), equalTo(dog2.getWeight()));
     }
 
-    private Dog createDog() {
+    private Dog createDog(Dog dog) {
         return given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON).when().post().body().as(Dog.class);
     }
 }
