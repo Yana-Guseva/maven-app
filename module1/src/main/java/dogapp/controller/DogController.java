@@ -27,7 +27,8 @@ public class DogController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Dog createDog(@RequestBody Dog dog) {
         dog.setId(UUID.randomUUID());
-        return dogs.put(dog.getId(), dog);
+        dogs.put(dog.getId(), dog);
+        return dog;
     }
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,7 +44,9 @@ public class DogController {
         if (!dogs.containsKey(id)) {
             throw new DogNotFoundException();
         }
-        return dogs.put(id, dog);
+        dog.setId(id);
+        dogs.put(dog.getId(), dog);
+        return dog;
     }
 
     @DeleteMapping("{id}")

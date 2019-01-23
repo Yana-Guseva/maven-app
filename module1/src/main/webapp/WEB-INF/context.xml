@@ -13,5 +13,6 @@
     </mvc:annotation-driven>
 
     <bean id="dogController" class="dogapp.controller.DogController"/>
+    <bean id="exceptionHandler" class="dogapp.controller.RestExceptionHandler"/>
 
 </beans>
