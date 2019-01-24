@@ -21,8 +21,18 @@ public class DogController {
     private static final Dog DOG = Dog.builder().id(ID).name("Rema")
             .dateOfBirth(LocalDate.of(2018, 9, 7)).height(60.).weight(17.).build();
 
+    private static final UUID ID_FOR_UPDATE = UUID.fromString("a332695f-cef5-41a6-984e-5213cb2fd372");
+    private static final Dog DOG_FOR_UPDATE = Dog.builder().id(ID_FOR_UPDATE).name("Belka")
+            .dateOfBirth(LocalDate.of(1955, 7, 7)).height(47.).weight(13.).build();
+
+    private static final UUID ID_FOR_DELETE = UUID.fromString("7223739b-7a40-4fa1-9cae-3c5001a2f39f");
+    private static final Dog DOG_FOR_DELETE = Dog.builder().id(ID_FOR_UPDATE).name("Strelka")
+            .dateOfBirth(LocalDate.of(1955, 7, 7)).height(47.).weight(13.).build();
+
     static {
         dogs.put(ID, DOG);
+        dogs.put(ID_FOR_UPDATE, DOG_FOR_UPDATE);
+        dogs.put(ID_FOR_DELETE, DOG_FOR_DELETE);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
