@@ -66,7 +66,7 @@ public class DogControllerTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenUpdateNotExistingDog() {
+    public void shouldReturnDogNotFoundWhenUpdateNotExistingDog() {
         ErrorResponse errorResponse = given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
                 .when().put("{id}", UUID.randomUUID()).then().statusCode(HttpStatus.NOT_FOUND.value())
                 .extract().body().as(ErrorResponse.class);
@@ -74,27 +74,26 @@ public class DogControllerTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenCreateInvalidDog() {
+    public void shouldReturnBadRequestWhenCreateInvalidDog() {
         Dog dog = createDog(DogTestUtils.generateDog());
         dog.setName(null);
 
         given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
-                .when().put("{id}", dog.getId()).then().statusCode(HttpStatus.BAD_REQUEST.value()).extract().body().as(ErrorResponse.class);
+                .when().put("{id}", dog.getId()).then().statusCode(HttpStatus.BAD_REQUEST.value());
 
     }
 
     @Test
-    public void shouldThrowExceptionWhenUpdateInvalidDog() {
+    public void shouldReturnBadRequestWhenUpdateInvalidDog() {
         Dog dog = DogTestUtils.generateDog();
         dog.setWeight(-9.);
 
         given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
-                .when().post().then().statusCode(HttpStatus.BAD_REQUEST.value()).extract().body().as(ErrorResponse.class);
-
+                .when().post().then().statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
-    public void shouldThrowExceptionWhenGetNotExistingDog() {
+    public void shouldReturnDogNotFoundWhenGetNotExistingDog() {
         ErrorResponse errorResponse = given().contentType(ContentType.JSON)
                 .when().get("{id}", UUID.randomUUID()).then().statusCode(HttpStatus.NOT_FOUND.value())
                 .extract().body().as(ErrorResponse.class);
@@ -102,14 +101,14 @@ public class DogControllerTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenDeleteNotExistingDog() {
+    public void shouldReturnDogNotFoundWhenDeleteNotExistingDog() {
         ErrorResponse errorResponse = given().when().delete("{id}", UUID.randomUUID()).then()
                 .statusCode(HttpStatus.NOT_FOUND.value()).extract().body().as(ErrorResponse.class);
         assertThat(errorResponse.getMessage(), equalTo(DOG_NOT_FOUND));
     }
 
     @Test
-    public void shouldThrowExceptionWhenWrongMediaType() {
+    public void shouldUnsupportedMediaTyprWhenWrongMediaType() {
         given().body(dog).accept(ContentType.TEXT).contentType(ContentType.TEXT)
                 .when().post().then().statusCode(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
     }

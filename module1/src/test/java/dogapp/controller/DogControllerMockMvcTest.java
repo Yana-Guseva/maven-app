@@ -56,7 +56,6 @@ public class DogControllerMockMvcTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(DOG)))
                 .andExpect(status().is(HttpStatus.OK.value()))
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(jsonPath("$.id").isNotEmpty())
                 .andExpect(jsonPath("$.name", is(DOG.getName())))
@@ -106,7 +105,7 @@ public class DogControllerMockMvcTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenUpdateNotExistingDog() throws Exception {
+    public void shouldReturnNotFoundWhenUpdateNotExistingDog() throws Exception {
         mvc.perform(put(BASE_URL + "/" + UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -115,7 +114,7 @@ public class DogControllerMockMvcTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenCreateInvalidDog() throws Exception {
+    public void shouldReturnBadRequestWhenCreateInvalidDog() throws Exception {
         Dog dog = generateDog();
         dog.setName(null);
 
@@ -127,7 +126,7 @@ public class DogControllerMockMvcTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenUpdateInvalidDog() throws Exception {
+    public void shouldReturnBadRequestWhenUpdateInvalidDog() throws Exception {
         Dog dog = generateDog();
         dog.setWeight(-9.);
 
@@ -139,20 +138,20 @@ public class DogControllerMockMvcTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenGetNotExistingDog() throws Exception {
+    public void shouldReturnNotFoundWhenGetNotExistingDog() throws Exception {
         mvc.perform(get(BASE_URL + "/" + UUID.randomUUID())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
     }
 
     @Test
-    public void shouldThrowExceptionWhenDeleteNotExistingDog() throws Exception {
+    public void shouldReturnNotFoundWhenDeleteNotExistingDog() throws Exception {
         mvc.perform(delete(BASE_URL + "/" + UUID.randomUUID()))
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
     }
 
     @Test
-    public void shouldThrowExceptionWhenWrongMediaType() throws Exception {
+    public void shouldReturnNotAcceptableWhenWrongMediaType() throws Exception {
         mvc.perform(get(BASE_URL + "/" + EXIST_DOG_ID)
                 .accept(ContentType.TEXT.toString()))
                 .andExpect(status().is(HttpStatus.NOT_ACCEPTABLE.value()));

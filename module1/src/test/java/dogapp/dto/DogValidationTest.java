@@ -24,7 +24,7 @@ public class DogValidationTest {
     }
 
     @Test
-    public void shouldMeetConstraintDogNameIsTooShort() {
+    public void shouldNotMeetConstraintDogNameIsTooShort() {
         Dog dog = DogTestUtils.generateDog();
         dog.setName("");
 
@@ -35,7 +35,7 @@ public class DogValidationTest {
     }
 
     @Test
-    public void shouldMeetConstraintDogNameIsTooLong() {
+    public void shouldNotMeetConstraintDogNameIsTooLong() {
         Dog dog = DogTestUtils.generateDog();
         dog.setName(new String(new char[101]).replace("\0", "a"));
 
@@ -46,7 +46,7 @@ public class DogValidationTest {
     }
 
     @Test
-    public void shouldMeetConstraintDogNameIsNull() {
+    public void shouldNotMeetConstraintDogNameIsNull() {
         Dog dog = DogTestUtils.generateDog();
         dog.setName(null);
 
@@ -57,7 +57,7 @@ public class DogValidationTest {
     }
 
     @Test
-    public void shouldMeetConstraintDogBirthdayIsNow() {
+    public void shouldNotMeetConstraintDogBirthdayIsNow() {
         Dog dog = DogTestUtils.generateDog();
         dog.setDateOfBirth(LocalDate.now());
 
@@ -68,7 +68,7 @@ public class DogValidationTest {
     }
 
     @Test
-    public void shouldMeetConstraintDogHighIsNegative() {
+    public void shouldNotMeetConstraintDogHighIsNegative() {
         Dog dog = DogTestUtils.generateDog();
         dog.setHeight(-1.);
 
@@ -79,7 +79,7 @@ public class DogValidationTest {
     }
 
     @Test
-    public void shouldMeetConstraintDogHighIsNull() {
+    public void shouldNotMeetConstraintDogHighIsNull() {
         Dog dog = DogTestUtils.generateDog();
         dog.setHeight(null);
 
@@ -90,7 +90,7 @@ public class DogValidationTest {
     }
 
     @Test
-    public void shouldMeetConstraintDogWeightIsNegative() {
+    public void shouldNotMeetConstraintDogWeightIsNegative() {
         Dog dog = DogTestUtils.generateDog();
         dog.setWeight(-1.);
 
@@ -101,7 +101,7 @@ public class DogValidationTest {
     }
 
     @Test
-    public void shouldMeetConstraintDogWeightIsNull() {
+    public void shouldNotMeetConstraintDogWeightIsNull() {
         Dog dog = DogTestUtils.generateDog();
         dog.setWeight(null);
 

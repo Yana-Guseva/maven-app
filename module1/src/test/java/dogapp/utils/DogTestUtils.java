@@ -18,7 +18,7 @@ public class DogTestUtils {
         long randomDay = ThreadLocalRandom.current().nextLong(minDate, maxDate);
 
         return Dog.builder().id(UUID.randomUUID()).name("name" + ThreadLocalRandom.current().nextInt())
-                .dateOfBirth(LocalDate.ofEpochDay(randomDay)).height(55 + ThreadLocalRandom.current().nextDouble())
-                .weight(23 + ThreadLocalRandom.current().nextDouble()).build();
+                .dateOfBirth(LocalDate.ofEpochDay(randomDay)).height(ThreadLocalRandom.current().nextDouble(20., 60.))
+                .weight(ThreadLocalRandom.current().nextDouble(5., 60.)).build();
     }
 }
