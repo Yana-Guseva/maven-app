@@ -12,7 +12,10 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-    <bean id="dogController" class="dogapp.controller.DogController"/>
+    <bean id="dogDao" class="dogapp.dao.InMemoryDogDao"/>
+    <bean id="dogController" class="dogapp.controller.DogController">
+        <constructor-arg ref="dogDao"/>
+    </bean>
     <bean id="exceptionHandler" class="dogapp.controller.RestExceptionHandler"/>
 
 </beans>
