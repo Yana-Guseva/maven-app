@@ -15,6 +15,7 @@ import java.util.UUID;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 public class DogControllerTest {
 
@@ -32,7 +33,8 @@ public class DogControllerTest {
         Dog createdDog = given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
                 .when().post().then().statusCode(HttpStatus.OK.value()).extract().body().as(Dog.class);
 
-        assertThatFieldsAreEqual(createdDog, dog);
+        dog.setId(createdDog.getId());
+        assertReflectionEquals(createdDog, dog);
     }
 
     @Test
@@ -43,7 +45,7 @@ public class DogControllerTest {
                 .when().get("{id}", createdDog.getId()).then().statusCode(HttpStatus.OK.value()).extract().body().as(Dog.class);
 
         assertThat(createdDog.getId(), equalTo(dog.getId()));
-        assertThatFieldsAreEqual(createdDog, dog);
+        assertReflectionEquals(createdDog, dog);
     }
 
     @Test
@@ -53,8 +55,8 @@ public class DogControllerTest {
         Dog updatedDog = given().body(newDog).accept(ContentType.JSON).contentType(ContentType.JSON)
                 .when().put("{id}", createdDog.getId()).then().statusCode(HttpStatus.OK.value()).extract().body().as(Dog.class);
 
-        assertThat(updatedDog.getId(), equalTo(createdDog.getId()));
-        assertThatFieldsAreEqual(updatedDog, newDog);
+        newDog.setId(updatedDog.getId());
+        assertReflectionEquals(updatedDog, newDog);
     }
 
     @Test
@@ -111,13 +113,6 @@ public class DogControllerTest {
     public void shouldUnsupportedMediaTyprWhenWrongMediaType() {
         given().body(dog).accept(ContentType.TEXT).contentType(ContentType.TEXT)
                 .when().post().then().statusCode(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
-    }
-
-    private static void assertThatFieldsAreEqual(Dog dog1, Dog dog2) {
-        assertThat(dog1.getName(), equalTo(dog2.getName()));
-        assertThat(dog1.getDateOfBirth(), equalTo(dog2.getDateOfBirth()));
-        assertThat(dog1.getHeight(), equalTo(dog2.getHeight()));
-        assertThat(dog1.getWeight(), equalTo(dog2.getWeight()));
     }
 
     private Dog createDog(Dog dog) {
