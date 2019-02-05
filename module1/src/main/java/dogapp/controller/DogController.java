@@ -1,6 +1,6 @@
 package dogapp.controller;
 
-import dogapp.dao.InMemoryDogDao;
+import dogapp.dao.DogDao;
 import dogapp.dto.Dog;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequestMapping(value = "dog")
 public class DogController {
 
-    private final InMemoryDogDao dogDao;
+    private final DogDao dogDao;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Dog createDog(@Valid @RequestBody Dog dog) {
@@ -28,7 +28,8 @@ public class DogController {
 
     @PutMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Dog updateDog(@PathVariable UUID id, @Valid @RequestBody Dog dog) {
-        return dogDao.update(id, dog);
+        dog.setId(id);
+        return dogDao.update(dog);
     }
 
     @DeleteMapping("{id}")

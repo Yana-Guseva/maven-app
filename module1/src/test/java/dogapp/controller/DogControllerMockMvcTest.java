@@ -20,7 +20,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.UUID;
 
-import static dogapp.utils.DogTestUtils.DOG;
 import static dogapp.utils.DogTestUtils.generateDog;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:context.xml")
+@ContextConfiguration("classpath:test-context.xml")
 @WebAppConfiguration
 public class DogControllerMockMvcTest {
 
@@ -106,10 +105,12 @@ public class DogControllerMockMvcTest {
 
     @Test
     public void shouldReturnNotFoundWhenUpdateNotExistingDog() throws Exception {
+        Dog createdDog = createDog(DogTestUtils.generateDog());
+
         mvc.perform(put(BASE_URL + "/" + UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(DOG)))
+                .content(objectMapper.writeValueAsString(createdDog)))
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
     }
 

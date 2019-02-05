@@ -2,14 +2,12 @@ package dogapp.dao;
 
 import dogapp.dto.Dog;
 import dogapp.exception.DogNotFoundException;
-import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
-public class InMemoryDogDao implements Dao<Dog> {
+public class InMemoryDogDao implements DogDao {
     private static final Map<UUID, Dog> dogs = new ConcurrentHashMap<>();
 
     @Override
@@ -22,17 +20,16 @@ public class InMemoryDogDao implements Dao<Dog> {
     @Override
     public Dog get(UUID id) {
         if (!dogs.containsKey(id)) {
-            throw new DogNotFoundException();
+            throw new DogNotFoundException(id);
         }
         return dogs.get(id);
     }
 
     @Override
-    public Dog update(UUID id, Dog dog) {
-        if (!dogs.containsKey(id)) {
-            throw new DogNotFoundException();
+    public Dog update(Dog dog) {
+        if (!dogs.containsKey(dog.getId())) {
+            throw new DogNotFoundException(dog.getId());
         }
-        dog.setId(id);
         dogs.put(dog.getId(), dog);
         return dog;
     }
@@ -40,7 +37,7 @@ public class InMemoryDogDao implements Dao<Dog> {
     @Override
     public void delete(UUID id) {
         if (!dogs.containsKey(id)) {
-            throw new DogNotFoundException();
+            throw new DogNotFoundException(id);
         }
         dogs.remove(id);
     }

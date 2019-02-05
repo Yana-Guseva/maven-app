@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <bean id="dogController" class="dogapp.controller.DogController">
+        <constructor-arg ref="dogDao"/>
+    </bean>
+    <bean id="exceptionHandler" class="dogapp.controller.RestExceptionHandler"/>
+
+    <beans profile="default">
+        <bean id="dogDao" class="dogapp.dao.InMemoryDogDao"/>
+    </beans>
+    <beans profile="jdbc">
+        <bean id="dogDao" class="dogapp.dao.JdbcDogDao">
+            <constructor-arg>
+                <jdbc:embedded-database id="dataSource" type="H2">
+                    <jdbc:script location="classpath:/db/schema.sql"/>
+                </jdbc:embedded-database>
+            </constructor-arg>
+        </bean>
+    </beans>
+
+</beans>

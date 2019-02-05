@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
@@ -72,7 +73,7 @@ public class DogControllerTest {
         ErrorResponse errorResponse = given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
                 .when().put("{id}", UUID.randomUUID()).then().statusCode(HttpStatus.NOT_FOUND.value())
                 .extract().body().as(ErrorResponse.class);
-        assertThat(errorResponse.getMessage(), equalTo(DOG_NOT_FOUND));
+        assertThat(errorResponse.getMessage(), containsString(DOG_NOT_FOUND));
     }
 
     @Test
@@ -99,14 +100,14 @@ public class DogControllerTest {
         ErrorResponse errorResponse = given().contentType(ContentType.JSON)
                 .when().get("{id}", UUID.randomUUID()).then().statusCode(HttpStatus.NOT_FOUND.value())
                 .extract().body().as(ErrorResponse.class);
-        assertThat(errorResponse.getMessage(), equalTo(DOG_NOT_FOUND));
+        assertThat(errorResponse.getMessage(), containsString(DOG_NOT_FOUND));
     }
 
     @Test
     public void shouldReturnDogNotFoundWhenDeleteNotExistingDog() {
         ErrorResponse errorResponse = given().when().delete("{id}", UUID.randomUUID()).then()
                 .statusCode(HttpStatus.NOT_FOUND.value()).extract().body().as(ErrorResponse.class);
-        assertThat(errorResponse.getMessage(), equalTo(DOG_NOT_FOUND));
+        assertThat(errorResponse.getMessage(), containsString(DOG_NOT_FOUND));
     }
 
     @Test
