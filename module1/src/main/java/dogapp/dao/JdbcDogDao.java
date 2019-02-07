@@ -30,17 +30,17 @@ public class JdbcDogDao implements DogDao {
     public Dog create(Dog dog) {
         dog.setId(UUID.randomUUID());
         executeUpdate(String.format(Locale.US, "INSERT INTO DOG (id, name, dateOfBirth, height, weight) " +
-                        "values ('%s', '%s', %s, %f, %f)", dog.getId(), dog.getName(), wrapInQuotesOrNull(dog.getDateOfBirth()),
-                dog.getHeight(), dog.getWeight()));
+                        "values ('%s', %s, %s, %f, %f)", dog.getId(), wrapInQuotesOrNull(dog.getName()),
+                wrapInQuotesOrNull(dog.getDateOfBirth()), dog.getHeight(), dog.getWeight()));
         return dog;
     }
 
     @Override
     public Dog update(Dog dog) {
-        int updatedRows = executeUpdate(String.format(Locale.US, "UPDATE DOG SET name = '%s', dateOfBirth = %s, " +
-                        "height = %f, weight = %f WHERE id = '%s'", dog.getName(), wrapInQuotesOrNull(dog.getDateOfBirth()),
-                dog.getHeight(), dog.getWeight(), dog.getId()));
-        if (updatedRows != 1) {
+        int updatedRows = executeUpdate(String.format(Locale.US, "UPDATE DOG SET name = %s, dateOfBirth = %s, " +
+                        "height = %f, weight = %f WHERE id = '%s'", wrapInQuotesOrNull(dog.getName()),
+                wrapInQuotesOrNull(dog.getDateOfBirth()), dog.getHeight(), dog.getWeight(), dog.getId()));
+        if (updatedRows < 1) {
             throw new DogNotFoundException(dog.getId());
         }
         return dog;
@@ -49,7 +49,7 @@ public class JdbcDogDao implements DogDao {
     @Override
     public void delete(UUID id) {
         int updatedRows = executeUpdate(String.format(Locale.US, "DELETE FROM DOG WHERE id = '%s'", id));
-        if (updatedRows != 1) {
+        if (updatedRows < 1) {
             throw new DogNotFoundException(id);
         }
     }
