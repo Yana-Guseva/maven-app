@@ -11,6 +11,8 @@ import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
 import java.util.Set;
 
+import static io.qala.datagen.RandomShortApi.alphanumeric;
+import static io.qala.datagen.RandomShortApi.negativeDouble;
 import static junit.framework.Assert.assertEquals;
 
 public class DogValidationTest {
@@ -37,7 +39,7 @@ public class DogValidationTest {
     @Test
     public void shouldNotMeetConstraintDogNameIsTooLong() {
         Dog dog = DogTestUtils.generateDog();
-        dog.setName(new String(new char[101]).replace("\0", "a"));
+        dog.setName(alphanumeric(101));
 
         Set<ConstraintViolation<Dog>> constraintViolations = validator.validate(dog);
 
@@ -70,7 +72,7 @@ public class DogValidationTest {
     @Test
     public void shouldNotMeetConstraintDogHighIsNegative() {
         Dog dog = DogTestUtils.generateDog();
-        dog.setHeight(-1.);
+        dog.setHeight(negativeDouble());
 
         Set<ConstraintViolation<Dog>> constraintViolations = validator.validate(dog);
 
@@ -92,7 +94,7 @@ public class DogValidationTest {
     @Test
     public void shouldNotMeetConstraintDogWeightIsNegative() {
         Dog dog = DogTestUtils.generateDog();
-        dog.setWeight(-1.);
+        dog.setWeight(negativeDouble());
 
         Set<ConstraintViolation<Dog>> constraintViolations = validator.validate(dog);
 

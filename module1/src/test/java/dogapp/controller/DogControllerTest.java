@@ -2,16 +2,16 @@ package dogapp.controller;
 
 import dogapp.ErrorResponse;
 import dogapp.dto.Dog;
-import dogapp.utils.DogTestUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
+import static dogapp.utils.DogTestUtils.generateDog;
+import static io.qala.datagen.RandomShortApi.negativeDouble;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -21,8 +21,6 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 public class DogControllerTest {
 
     private static final String DOG_NOT_FOUND = "Dog not found";
-    private static Dog dog = Dog.builder().name("Rema").dateOfBirth(LocalDate.of(2018, 9, 7))
-            .height(60.).weight(17.).build();
 
     @BeforeClass
     public void setUp() {
@@ -31,6 +29,7 @@ public class DogControllerTest {
 
     @Test
     public void shouldCreateDog() {
+        Dog dog = generateDog();
         Dog createdDog = given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
                 .when().post().then().statusCode(HttpStatus.OK.value()).extract().body().as(Dog.class);
 
@@ -40,7 +39,7 @@ public class DogControllerTest {
 
     @Test
     public void shouldGetDog() {
-        Dog createdDog = createDog(DogTestUtils.generateDog());
+        Dog createdDog = createDog(generateDog());
 
         Dog dog = given().contentType(ContentType.JSON)
                 .when().get("{id}", createdDog.getId()).then().statusCode(HttpStatus.OK.value()).extract().body().as(Dog.class);
@@ -51,8 +50,8 @@ public class DogControllerTest {
 
     @Test
     public void shouldUpdateDog() {
-        Dog createdDog = createDog(DogTestUtils.generateDog());
-        Dog newDog = DogTestUtils.generateDog();
+        Dog createdDog = createDog(generateDog());
+        Dog newDog = generateDog();
         Dog updatedDog = given().body(newDog).accept(ContentType.JSON).contentType(ContentType.JSON)
                 .when().put("{id}", createdDog.getId()).then().statusCode(HttpStatus.OK.value()).extract().body().as(Dog.class);
 
@@ -62,7 +61,7 @@ public class DogControllerTest {
 
     @Test
     public void shouldDeleteDog() {
-        Dog createdDog = createDog(DogTestUtils.generateDog());
+        Dog createdDog = createDog(generateDog());
 
         given().when().delete("{id}", createdDog.getId()).then().statusCode(HttpStatus.OK.value());
         given().when().get("{id}", createdDog.getId()).then().assertThat().statusCode(HttpStatus.NOT_FOUND.value());
@@ -70,7 +69,7 @@ public class DogControllerTest {
 
     @Test
     public void shouldReturnDogNotFoundWhenUpdateNotExistingDog() {
-        ErrorResponse errorResponse = given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
+        ErrorResponse errorResponse = given().body(generateDog()).accept(ContentType.JSON).contentType(ContentType.JSON)
                 .when().put("{id}", UUID.randomUUID()).then().statusCode(HttpStatus.NOT_FOUND.value())
                 .extract().body().as(ErrorResponse.class);
         assertThat(errorResponse.getMessage(), containsString(DOG_NOT_FOUND));
@@ -78,7 +77,7 @@ public class DogControllerTest {
 
     @Test
     public void shouldReturnBadRequestWhenCreateInvalidDog() {
-        Dog dog = createDog(DogTestUtils.generateDog());
+        Dog dog = createDog(generateDog());
         dog.setName(null);
 
         given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
@@ -88,8 +87,8 @@ public class DogControllerTest {
 
     @Test
     public void shouldReturnBadRequestWhenUpdateInvalidDog() {
-        Dog dog = DogTestUtils.generateDog();
-        dog.setWeight(-9.);
+        Dog dog = generateDog();
+        dog.setWeight(negativeDouble());
 
         given().body(dog).accept(ContentType.JSON).contentType(ContentType.JSON)
                 .when().post().then().statusCode(HttpStatus.BAD_REQUEST.value());
@@ -112,7 +111,7 @@ public class DogControllerTest {
 
     @Test
     public void shouldUnsupportedMediaTyprWhenWrongMediaType() {
-        given().body(dog).accept(ContentType.TEXT).contentType(ContentType.TEXT)
+        given().body(generateDog()).accept(ContentType.TEXT).contentType(ContentType.TEXT)
                 .when().post().then().statusCode(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
     }
 

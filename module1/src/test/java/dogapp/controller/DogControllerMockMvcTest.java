@@ -21,13 +21,14 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.UUID;
 
 import static dogapp.utils.DogTestUtils.generateDog;
+import static io.qala.datagen.RandomShortApi.negativeDouble;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:test-context.xml")
+@ContextConfiguration({"classpath:test-context.xml", "classpath:context.xml"})
 @WebAppConfiguration
 public class DogControllerMockMvcTest {
 
@@ -129,7 +130,7 @@ public class DogControllerMockMvcTest {
     @Test
     public void shouldReturnBadRequestWhenUpdateInvalidDog() throws Exception {
         Dog dog = generateDog();
-        dog.setWeight(-9.);
+        dog.setWeight(negativeDouble());
 
         mvc.perform(put(BASE_URL + "/" + UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
