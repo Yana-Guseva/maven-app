@@ -5,7 +5,6 @@ import dogapp.exception.DogNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,20 +20,8 @@ public class JdbcDogDao implements DogDao {
     private static final String INSERT_QUERY = "INSERT INTO DOG (id, name, dateOfBirth, height, weight) values (?, ?, ?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE DOG SET name = ?, dateOfBirth = ?, height = ?, weight = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM DOG WHERE id = ?";
-    private static final String CREATE_QUERY =
-            "CREATE TABLE IF NOT EXISTS DOG(" +
-                    "id UUID primary key, " +
-                    "name varchar(100) not null, " +
-                    "dateOfBirth timestamp, " +
-                    "height double precision not null, " +
-                    "weight double precision not null);";
 
     private final DataSource dataSource;
-
-    @PostConstruct
-    private void init() {
-        executeUpdate(CREATE_QUERY, ps -> {});
-    }
 
     @Override
     public Dog get(UUID id) {

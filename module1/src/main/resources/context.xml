@@ -23,6 +23,12 @@
         <property name="username" value="postgres" />
         <property name="password" value="root" />
     </bean>
+    <bean id="flywayConfig" class="org.flywaydb.core.api.configuration.ClassicConfiguration">
+        <property name="dataSource" ref="postgresDataSource"/>
+    </bean>
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <constructor-arg ref="flywayConfig"/>
+    </bean>
 
     <beans profile="default">
         <bean id="dogDao" class="dogapp.dao.InMemoryDogDao"/>
