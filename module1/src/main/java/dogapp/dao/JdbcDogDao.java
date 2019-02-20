@@ -70,9 +70,17 @@ public class JdbcDogDao implements DogDao {
 
     private Dog executeQuery(String query, AcceptParameters function) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(query);
-            function.accept(ps);
-            return mapResultSetToDog(ps.executeQuery());
+            connection.setAutoCommit(false);
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                function.accept(ps);
+                try (ResultSet resultSet = ps.executeQuery()) {
+                    connection.commit();
+                    return mapResultSetToDog(resultSet);
+                } catch (SQLException e) {
+                    connection.rollback();
+                    throw new RuntimeException(e);
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -80,9 +88,19 @@ public class JdbcDogDao implements DogDao {
 
     private int executeUpdate(String query, AcceptParameters function) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(query);
-            function.accept(ps);
-            return ps.executeUpdate();
+            connection.setAutoCommit(false);
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                function.accept(ps);
+                try {
+                    int updatedRows;
+                    updatedRows = ps.executeUpdate();
+                    connection.commit();
+                    return updatedRows;
+                } catch (SQLException e) {
+                    connection.rollback();
+                    throw new RuntimeException(e);
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
