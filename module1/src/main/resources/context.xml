@@ -13,15 +13,15 @@
     </mvc:annotation-driven>
 
     <bean id="dogController" class="dogapp.controller.DogController">
-        <constructor-arg ref="dogDao"/>
+        <constructor-arg ref="dogService"/>
     </bean>
     <bean id="exceptionHandler" class="dogapp.controller.RestExceptionHandler"/>
     <bean id="postgresDataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="org.postgresql.Driver" />
-        <property name="url" value="jdbc:postgresql://localhost:5432/postgres" />
-        <property name="username" value="postgres" />
-        <property name="password" value="root" />
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="root"/>
     </bean>
     <bean id="flywayConfig" class="org.flywaydb.core.api.configuration.ClassicConfiguration">
         <property name="dataSource" ref="postgresDataSource"/>
@@ -29,22 +29,29 @@
     <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
         <constructor-arg ref="flywayConfig"/>
     </bean>
+    <bean id="dogService" class="dogapp.service.DogService">
+        <constructor-arg ref="dogDao"/>
+        <constructor-arg ref="jdbcConnectionHolder"/>
+    </bean>
+    <bean id="jdbcConnectionHolder" class="dogapp.JdbcConnectionHolder">
+        <constructor-arg ref="postgresDataSource"/>
+    </bean>
 
     <beans profile="default">
         <bean id="dogDao" class="dogapp.dao.InMemoryDogDao"/>
     </beans>
-    <beans profile="h2-jdbc">
-        <bean id="dogDao" class="dogapp.dao.JdbcDogDao">
-            <constructor-arg>
-                <jdbc:embedded-database id="dataSource" type="H2">
-                    <jdbc:script location="classpath:/db/schema.sql"/>
-                </jdbc:embedded-database>
-            </constructor-arg>
-        </bean>
-    </beans>
+    <!--<beans profile="h2-jdbc">-->
+        <!--<bean id="dogDao" class="dogapp.dao.JdbcDogDao">-->
+            <!--<constructor-arg>-->
+                <!--<jdbc:embedded-database id="dataSource" type="H2">-->
+                    <!--<jdbc:script location="classpath:/db/schema.sql"/>-->
+                <!--</jdbc:embedded-database>-->
+            <!--</constructor-arg>-->
+        <!--</bean>-->
+    <!--</beans>-->
     <beans profile="postgres-jdbc">
         <bean id="dogDao" class="dogapp.dao.JdbcDogDao">
-            <constructor-arg ref="postgresDataSource"/>
+            <constructor-arg ref="jdbcConnectionHolder"/>
         </bean>
     </beans>
 </beans>

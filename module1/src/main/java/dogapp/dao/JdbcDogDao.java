@@ -1,11 +1,11 @@
 package dogapp.dao;
 
+import dogapp.JdbcConnectionHolder;
 import dogapp.dto.Dog;
 import dogapp.exception.DogNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +21,7 @@ public class JdbcDogDao implements DogDao {
     private static final String UPDATE_QUERY = "UPDATE DOG SET name = ?, dateOfBirth = ?, height = ?, weight = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM DOG WHERE id = ?";
 
-    private final DataSource dataSource;
+    private final JdbcConnectionHolder connectionHolder;
 
     @Override
     public Dog get(UUID id) {
@@ -69,17 +69,11 @@ public class JdbcDogDao implements DogDao {
     }
 
     private Dog executeQuery(String query, AcceptParameters function) {
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement ps = connection.prepareStatement(query)) {
-                function.accept(ps);
-                try (ResultSet resultSet = ps.executeQuery()) {
-                    connection.commit();
-                    return mapResultSetToDog(resultSet);
-                } catch (SQLException e) {
-                    connection.rollback();
-                    throw new RuntimeException(e);
-                }
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            function.accept(ps);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                return mapResultSetToDog(resultSet);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -87,20 +81,10 @@ public class JdbcDogDao implements DogDao {
     }
 
     private int executeUpdate(String query, AcceptParameters function) {
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement ps = connection.prepareStatement(query)) {
-                function.accept(ps);
-                try {
-                    int updatedRows;
-                    updatedRows = ps.executeUpdate();
-                    connection.commit();
-                    return updatedRows;
-                } catch (SQLException e) {
-                    connection.rollback();
-                    throw new RuntimeException(e);
-                }
-            }
+        Connection connection = connectionHolder.getConnection();
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            function.accept(ps);
+            return ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

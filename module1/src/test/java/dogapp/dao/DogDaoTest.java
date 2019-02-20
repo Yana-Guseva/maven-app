@@ -1,6 +1,6 @@
-package dogapp.dto;
+package dogapp.dao;
 
-import dogapp.dao.DogDao;
+import dogapp.dto.Dog;
 import dogapp.exception.DogNotFoundException;
 import org.junit.Rule;
 import org.junit.Test;
