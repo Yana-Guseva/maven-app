@@ -19,7 +19,7 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 @ContextConfiguration({"classpath:test-context.xml", "classpath:context.xml"})
 public class DogServiceTest {
     @Autowired
-    private DogService dogService;
+    private DogServiceImpl dogServiceImpl;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -27,7 +27,7 @@ public class DogServiceTest {
     @Test
     public void shouldCreateDog() {
         Dog newDog = generateDog();
-        Dog dog = dogService.createDog(newDog);
+        Dog dog = dogServiceImpl.createDog(newDog);
         newDog.setId(dog.getId());
 
         assertReflectionEquals(newDog, dog);
@@ -37,7 +37,7 @@ public class DogServiceTest {
     public void shouldGetDog() {
         Dog newDog = generateDog();
         Dog createdDog = createDog(newDog);
-        Dog dog = dogService.getDog(createdDog.getId());
+        Dog dog = dogServiceImpl.getDog(createdDog.getId());
         newDog.setId(dog.getId());
 
         assertReflectionEquals(newDog, dog);
@@ -48,8 +48,8 @@ public class DogServiceTest {
         Dog createdDog = createDog(generateDog());
         Dog newDog = generateDog();
         newDog.setId(createdDog.getId());
-        dogService.updateDog(newDog);
-        Dog updatedDog = dogService.getDog(createdDog.getId());
+        dogServiceImpl.updateDog(newDog);
+        Dog updatedDog = dogServiceImpl.getDog(createdDog.getId());
 
         assertReflectionEquals(newDog, updatedDog);
     }
@@ -57,14 +57,14 @@ public class DogServiceTest {
     @Test
     public void shouldDeleteDog() {
         Dog createdDog = createDog(generateDog());
-        dogService.deleteDog(createdDog.getId());
+        dogServiceImpl.deleteDog(createdDog.getId());
 
         expectedException.expect(DogNotFoundException.class);
         expectedException.expectMessage("Dog not found " + createdDog.getId());
-        dogService.getDog(createdDog.getId());
+        dogServiceImpl.getDog(createdDog.getId());
     }
 
     private Dog createDog(Dog dog) {
-        return dogService.createDog(dog);
+        return dogServiceImpl.createDog(dog);
     }
 }

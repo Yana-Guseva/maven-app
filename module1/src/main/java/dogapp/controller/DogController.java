@@ -1,7 +1,7 @@
 package dogapp.controller;
 
 import dogapp.dto.Dog;
-import dogapp.service.DogService;
+import dogapp.service.TransactionalDogService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequestMapping(value = "dog")
 public class DogController {
 
-    private final DogService dogService;
+    private final TransactionalDogService dogService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Dog createDog(@Valid @RequestBody Dog dog) {

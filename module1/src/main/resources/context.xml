@@ -13,7 +13,7 @@
     </mvc:annotation-driven>
 
     <bean id="dogController" class="dogapp.controller.DogController">
-        <constructor-arg ref="dogService"/>
+        <constructor-arg ref="transactionalDogService"/>
     </bean>
     <bean id="exceptionHandler" class="dogapp.controller.RestExceptionHandler"/>
     <bean id="postgresDataSource"
@@ -29,14 +29,16 @@
     <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
         <constructor-arg ref="flywayConfig"/>
     </bean>
-    <bean id="dogService" class="dogapp.service.DogService">
+    <bean id="dogServiceImpl" class="dogapp.service.DogServiceImpl">
         <constructor-arg ref="dogDao"/>
-        <constructor-arg ref="jdbcConnectionHolder"/>
     </bean>
     <bean id="jdbcConnectionHolder" class="dogapp.JdbcConnectionHolder">
         <constructor-arg ref="postgresDataSource"/>
     </bean>
-
+    <bean id="transactionalDogService" class="dogapp.service.TransactionalDogService">
+        <constructor-arg ref="dogServiceImpl"/>
+        <constructor-arg ref="jdbcConnectionHolder"/>
+    </bean>
     <beans profile="default">
         <bean id="dogDao" class="dogapp.dao.InMemoryDogDao"/>
     </beans>
