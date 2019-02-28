@@ -13,7 +13,7 @@
     </mvc:annotation-driven>
 
     <bean id="dogController" class="dogapp.controller.DogController">
-        <constructor-arg ref="transactionalProxy"/>
+        <constructor-arg ref="cglibTransactionalProxy"/>
     </bean>
     <bean id="exceptionHandler" class="dogapp.controller.RestExceptionHandler"/>
     <bean id="postgresDataSource"
@@ -40,6 +40,10 @@
         <constructor-arg ref="jdbcConnectionHolder"/>
     </bean>
     <bean id="transactionalProxy" class="dogapp.service.TransactionalProxy" factory-method="newInstance">
+        <constructor-arg ref="dogServiceImpl"/>
+        <constructor-arg ref="jdbcConnectionHolder"/>
+    </bean>
+    <bean id="cglibTransactionalProxy" class="dogapp.service.CglibTransactionalDogService" factory-method="newInstance">
         <constructor-arg ref="dogServiceImpl"/>
         <constructor-arg ref="jdbcConnectionHolder"/>
     </bean>

@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import java.util.UUID;
 
 @AllArgsConstructor
-public class DogServiceImpl implements DogService {
+public class DogServiceImpl {
     private final DogDao dogDao;
 
     public Dog getDog(UUID id) {
