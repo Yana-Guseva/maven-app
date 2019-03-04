@@ -1,10 +1,17 @@
 package dogapp.controller;
 
 import dogapp.dto.Dog;
-import dogapp.service.DogService;
+import dogapp.service.DogServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -14,7 +21,7 @@ import java.util.UUID;
 @RequestMapping(value = "dog")
 public class DogController {
 
-    private final DogService dogService;
+    private final DogServiceImpl dogService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Dog createDog(@Valid @RequestBody Dog dog) {

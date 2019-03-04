@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 @AllArgsConstructor
@@ -21,6 +22,9 @@ public class CglibTransactionalDogService implements InvocationHandler {
             return result;
         } catch (Exception e) {
             connectionHolder.rollback();
+            if (e instanceof InvocationTargetException) {
+                throw ((InvocationTargetException) e).getTargetException();
+            }
             throw e;
         } finally {
             connectionHolder.closeConnection();

@@ -3,12 +3,14 @@ package dogapp.service;
 import dogapp.dao.DogDao;
 import dogapp.dto.Dog;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @AllArgsConstructor
+@NoArgsConstructor
 public class DogServiceImpl {
-    private final DogDao dogDao;
+    private DogDao dogDao;
 
     public Dog getDog(UUID id) {
         return dogDao.get(id);
