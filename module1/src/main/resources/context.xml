@@ -3,8 +3,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <mvc:annotation-driven>
         <mvc:message-converters>
@@ -12,8 +13,10 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <aop:aspectj-autoproxy/>
+
     <bean id="dogController" class="dogapp.controller.DogController">
-        <constructor-arg ref="cglibTransactionalProxy"/>
+        <constructor-arg ref="dogServiceImpl"/>
     </bean>
     <bean id="exceptionHandler" class="dogapp.controller.RestExceptionHandler"/>
     <bean id="postgresDataSource"
@@ -49,6 +52,9 @@
                 <constructor-arg ref="dogDao"/>
             </bean>
         </constructor-arg>
+        <constructor-arg ref="jdbcConnectionHolder"/>
+    </bean>
+    <bean id="transactionalAspect" class="dogapp.aspect.TransactionalAspect">
         <constructor-arg ref="jdbcConnectionHolder"/>
     </bean>
     <beans profile="default">
