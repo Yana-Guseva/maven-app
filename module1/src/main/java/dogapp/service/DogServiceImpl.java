@@ -4,14 +4,12 @@ import dogapp.aspect.Transactional;
 import dogapp.dao.DogDao;
 import dogapp.dto.Dog;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @AllArgsConstructor
-@NoArgsConstructor
 public class DogServiceImpl {
-    private DogDao dogDao;
+    private final DogDao dogDao;
 
     @Transactional
     public Dog getDog(UUID id) {

@@ -16,7 +16,7 @@
     <aop:aspectj-autoproxy/>
 
     <bean id="dogController" class="dogapp.controller.DogController">
-        <constructor-arg ref="dogServiceImpl"/>
+        <constructor-arg ref="cglibTransactionalProxy"/>
     </bean>
     <bean id="dogServiceImpl" class="dogapp.service.DogServiceImpl">
         <constructor-arg ref="dogDao"/>
@@ -60,6 +60,7 @@
                 </bean>
             </constructor-arg>
             <constructor-arg ref="jdbcConnectionHolder"/>
+            <constructor-arg ref="dogDao"/>
         </bean>
         <bean id="transactionalAspect" class="dogapp.aspect.TransactionalAspect">
             <constructor-arg ref="jdbcConnectionHolder"/>
