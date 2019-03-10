@@ -19,7 +19,7 @@ import static io.qala.datagen.RandomShortApi.alphanumeric;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("postgres-jdbc")
+@ActiveProfiles("postgres")
 @ContextConfiguration({"classpath:test-context.xml", "classpath:context.xml"})
 public class DogDaoTest {
     @Autowired

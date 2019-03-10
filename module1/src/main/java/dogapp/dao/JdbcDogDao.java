@@ -4,7 +4,6 @@ import dogapp.JdbcConnectionHolder;
 import dogapp.dto.Dog;
 import dogapp.exception.DogNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Profile;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +12,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Profile("postgres-jdbc")
 @AllArgsConstructor
 public class JdbcDogDao implements DogDao {
     private static final String SELECT_QUERY = "SELECT * FROM DOG WHERE id = ?";
