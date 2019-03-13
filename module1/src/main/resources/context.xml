@@ -65,7 +65,6 @@
         <bean id="transactionalAspect" class="dogapp.aspect.TransactionalAspect">
             <constructor-arg ref="jdbcConnectionHolder"/>
         </bean>
-        <bean class="dogapp.aspectj.LogMeAspect" factory-method="aspectOf"/>
     </beans>
     <beans profile="h2">
         <util:properties id="properties" location="classpath:h2.properties"/>
