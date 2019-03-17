@@ -14,6 +14,12 @@
     </mvc:annotation-driven>
 
     <aop:aspectj-autoproxy/>
+    <aop:config>
+        <aop:aspect id="transactionalAspect" ref="transactionalAspectBean">
+            <aop:pointcut id="pointcut" expression="@annotation(dogapp.aspect.Transactional)"/>
+            <aop:around pointcut-ref="pointcut" method="transactionalMethodInvoke"/>
+        </aop:aspect>
+    </aop:config>
 
     <bean id="dogController" class="dogapp.controller.DogController">
         <constructor-arg ref="dogServiceImpl"/>
@@ -44,25 +50,7 @@
         <bean id="jdbcConnectionHolder" class="dogapp.JdbcConnectionHolder">
             <constructor-arg ref="dataSource"/>
         </bean>
-        <bean id="transactionalDogService" class="dogapp.service.TransactionalDogService">
-            <constructor-arg ref="dogServiceImpl"/>
-            <constructor-arg ref="jdbcConnectionHolder"/>
-        </bean>
-        <bean id="transactionalProxy" class="dogapp.service.TransactionalProxy" factory-method="newInstance">
-            <constructor-arg ref="dogServiceImpl"/>
-            <constructor-arg ref="jdbcConnectionHolder"/>
-        </bean>
-        <bean id="cglibTransactionalProxy" class="dogapp.service.CglibTransactionalDogService"
-              factory-method="newInstance">
-            <constructor-arg>
-                <bean class="dogapp.service.DogServiceImpl">
-                    <constructor-arg ref="dogDao"/>
-                </bean>
-            </constructor-arg>
-            <constructor-arg ref="jdbcConnectionHolder"/>
-            <constructor-arg ref="dogDao"/>
-        </bean>
-        <bean id="transactionalAspect" class="dogapp.aspect.TransactionalAspect">
+        <bean id="transactionalAspectBean" class="dogapp.aspect.TransactionalAspect">
             <constructor-arg ref="jdbcConnectionHolder"/>
         </bean>
     </beans>

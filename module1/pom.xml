@@ -15,11 +15,6 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <properties>
-        <project.build.directory>C:/Users/Yana/IdeaProjects/betraining/maven-app/module1/target/
-        </project.build.directory>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -151,11 +146,6 @@
             <version>1.8.13</version>
         </dependency>
         <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>1.9.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.26</version>
@@ -212,7 +202,6 @@
                 <configuration>
                     <forceAjcCompile>true</forceAjcCompile>
                     <sources/>
-                    <aspectDirectory>src/main/java/dogapp/aspectj</aspectDirectory>
                     <weaveDirectories>
                         <weaveDirectory>${project.build.directory}</weaveDirectory>
                     </weaveDirectories>
