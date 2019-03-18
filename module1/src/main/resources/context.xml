@@ -28,36 +28,28 @@
         <constructor-arg ref="dogDao"/>
     </bean>
     <bean id="exceptionHandler" class="dogapp.controller.RestExceptionHandler"/>
-    <beans profile="default">
-        <bean id="dogDao" class="dogapp.dao.InMemoryDogDao"/>
-    </beans>
-    <beans profile="h2,postgres">
-        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-            <property name="driverClassName" value="#{properties.driverClassName}"/>
-            <property name="url" value="#{properties.url}"/>
-            <property name="username" value="#{properties.username}"/>
-            <property name="password" value="#{properties.password}"/>
-        </bean>
-        <bean id="dogDao" class="dogapp.dao.JdbcDogDao">
-            <constructor-arg ref="jdbcConnectionHolder"/>
-        </bean>
-        <bean id="flywayConfig" class="org.flywaydb.core.api.configuration.ClassicConfiguration">
-            <property name="dataSource" ref="dataSource"/>
-        </bean>
-        <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
-            <constructor-arg ref="flywayConfig"/>
-        </bean>
-        <bean id="jdbcConnectionHolder" class="dogapp.JdbcConnectionHolder">
-            <constructor-arg ref="dataSource"/>
-        </bean>
-        <bean id="transactionalAspectBean" class="dogapp.aspect.TransactionalAspect">
-            <constructor-arg ref="jdbcConnectionHolder"/>
-        </bean>
-    </beans>
-    <beans profile="h2">
-        <util:properties id="properties" location="classpath:h2.properties"/>
-    </beans>
-    <beans profile="postgres">
-        <util:properties id="properties" location="classpath:postgres.properties"/>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="#{properties.driverClassName}"/>
+        <property name="url" value="#{properties.url}"/>
+        <property name="username" value="#{properties.username}"/>
+        <property name="password" value="#{properties.password}"/>
+    </bean>
+    <bean id="dogDao" class="dogapp.dao.JdbcDogDao">
+        <constructor-arg ref="jdbcConnectionHolder"/>
+    </bean>
+    <bean id="flywayConfig" class="org.flywaydb.core.api.configuration.ClassicConfiguration">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <constructor-arg ref="flywayConfig"/>
+    </bean>
+    <bean id="jdbcConnectionHolder" class="dogapp.JdbcConnectionHolder">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+    <bean id="transactionalAspectBean" class="dogapp.aspect.TransactionalAspect">
+        <constructor-arg ref="jdbcConnectionHolder"/>
+    </bean>
+    <beans>
+        <util:properties id="properties" location="classpath:db.properties"/>
     </beans>
 </beans>

@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -29,7 +28,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("postgres")
 @ContextConfiguration({"classpath:test-context.xml", "classpath:context.xml"})
 @WebAppConfiguration
 public class DogControllerMockMvcTest {

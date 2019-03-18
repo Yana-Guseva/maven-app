@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -15,7 +14,6 @@ import static dogapp.utils.DogTestUtils.generateDog;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("postgres")
 @ContextConfiguration({"classpath:test-context.xml", "classpath:context.xml"})
 public class DogServiceTest {
     @Autowired
