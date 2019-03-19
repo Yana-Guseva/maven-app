@@ -1,10 +1,10 @@
 package dogapp.service;
 
-import dogapp.aspect.Transactional;
 import dogapp.aspectj.LogMe;
 import dogapp.dao.DogDao;
 import dogapp.dto.Dog;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -13,6 +13,7 @@ public class DogServiceImpl {
     private final DogDao dogDao;
 
     @LogMe
+    @Transactional
     public Dog getDog(UUID id) {
         return dogDao.get(id);
     }
