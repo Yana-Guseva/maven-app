@@ -1,10 +1,11 @@
 package dogapp.dao;
 
-import dogapp.JdbcConnectionHolder;
 import dogapp.dto.Dog;
 import dogapp.exception.DogNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +20,7 @@ public class JdbcDogDao implements DogDao {
     private static final String UPDATE_QUERY = "UPDATE DOG SET name = ?, dateOfBirth = ?, height = ?, weight = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM DOG WHERE id = ?";
 
-    private final JdbcConnectionHolder connectionHolder;
+    private final DataSource dataSource;
 
     @Override
     public Dog get(UUID id) {
@@ -67,7 +68,7 @@ public class JdbcDogDao implements DogDao {
     }
 
     private Dog executeQuery(String query, AcceptParameters function) {
-        Connection connection = connectionHolder.getConnection();
+        Connection connection = DataSourceUtils.getConnection(dataSource);
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             function.accept(ps);
             try (ResultSet resultSet = ps.executeQuery()) {
@@ -79,7 +80,7 @@ public class JdbcDogDao implements DogDao {
     }
 
     private int executeUpdate(String query, AcceptParameters function) {
-        Connection connection = connectionHolder.getConnection();
+        Connection connection = DataSourceUtils.getConnection(dataSource);
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             function.accept(ps);
             return ps.executeUpdate();

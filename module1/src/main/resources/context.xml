@@ -21,6 +21,10 @@
         </aop:aspect>
     </aop:config>
 
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
     <bean id="dogController" class="dogapp.controller.DogController">
         <constructor-arg ref="dogServiceImpl"/>
     </bean>
@@ -35,7 +39,7 @@
         <property name="password" value="#{properties.password}"/>
     </bean>
     <bean id="dogDao" class="dogapp.dao.JdbcDogDao">
-        <constructor-arg ref="jdbcConnectionHolder"/>
+        <constructor-arg ref="dataSource"/>
     </bean>
     <bean id="flywayConfig" class="org.flywaydb.core.api.configuration.ClassicConfiguration">
         <property name="dataSource" ref="dataSource"/>
@@ -43,11 +47,8 @@
     <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
         <constructor-arg ref="flywayConfig"/>
     </bean>
-    <bean id="jdbcConnectionHolder" class="dogapp.JdbcConnectionHolder">
-        <constructor-arg ref="dataSource"/>
-    </bean>
     <bean id="transactionalAspectBean" class="dogapp.aspect.TransactionalAspect">
-        <constructor-arg ref="jdbcConnectionHolder"/>
+        <constructor-arg ref="txManager"/>
     </bean>
     <beans>
         <util:properties id="properties" location="classpath:db.properties"/>
