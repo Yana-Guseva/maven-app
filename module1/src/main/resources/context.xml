@@ -31,12 +31,15 @@
     <bean id="dogServiceImpl" class="dogapp.service.DogServiceImpl">
         <constructor-arg ref="dogDao"/>
     </bean>
-    <bean id="exceptionHandler" class="dogapp.controller.RestExceptionHandler"/>
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="#{properties.driverClassName}"/>
-        <property name="url" value="#{properties.url}"/>
-        <property name="username" value="#{properties.username}"/>
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="#{properties.driverClassName}"/>
+        <property name="jdbcUrl" value="#{properties.url}"/>
+        <property name="user" value="#{properties.username}"/>
         <property name="password" value="#{properties.password}"/>
+        <property name="minPoolSize" value="2"/>
+        <property name="maxPoolSize" value="15"/>
+        <property name="maxStatements" value="60"/>
+        <property name="maxStatementsPerConnection" value="4"/>
     </bean>
     <bean id="dogDao" class="dogapp.dao.JdbcTemplateDogDao">
         <constructor-arg>
