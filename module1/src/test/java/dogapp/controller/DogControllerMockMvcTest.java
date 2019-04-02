@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:test-context.xml", "classpath:context.xml"})
+@ContextConfiguration({"classpath:test-context.xml"})
 @WebAppConfiguration
 public class DogControllerMockMvcTest {
 

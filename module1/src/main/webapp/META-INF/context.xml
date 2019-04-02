@@ -18,17 +18,22 @@
 <!-- The contents of this file will be loaded for each web application -->
 <Context>
 
-    <!-- Default set of monitored resources. If one of these changes, the    -->
-    <!-- web application will be reloaded.                                   -->
-    <WatchedResource>WEB-INF/web.xml</WatchedResource>
-    <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
-	
-	<ResourceLink name="jdbc/myPostgres"
-                      global="jdbc/postgres"
-                      type="javax.sql.DataSource"/>
+    <Resource name="jdbc/myPostgres" auth="Container"
+              global="jdbc/myPostgres"
+              type="javax.sql.DataSource"
+              username="postgres" password="root"
+              url="jdbc:postgresql://localhost:5432/postgres"
+              driverClassName="org.postgresql.Driver"
+              initialSize="5" maxTotal="15"
+              maxWaitMillis="1000"
+              validationQuery="select 1"
+              testOnBorrow="false"
+              testOnReturn="true"
+              maxOpenPreparedStatements="60"
+              timeBetweenEvictionRunsMillis="30000"
+              testWhileIdle="true"
+              removeAbandoned="true"
+              removeAbandonedTimeout="30000"
+              logAbandoned="true"/>
 
-    <!-- Uncomment this to disable session persistence across Tomcat restarts -->
-    <!--
-    <Manager pathname="" />
-    -->
 </Context>
