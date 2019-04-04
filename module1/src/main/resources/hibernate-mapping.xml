@@ -1,0 +1,11 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="dogapp.dto.Dog" table="DOG">
+        <id name="id" type="java.util.UUID" column="id"/>
+        <property name="name" type="java.lang.String" column="name"/>
+        <property name="dateOfBirth" type="java.time.LocalDate" column="dateOfBirth"/>
+        <property name="height" type="java.lang.Double" column="height"/>
+        <property name="weight" type="java.lang.Double" column="weight"/>
+    </class>
+</hibernate-mapping>
