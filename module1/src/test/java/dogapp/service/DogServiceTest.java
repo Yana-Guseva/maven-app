@@ -14,7 +14,7 @@ import static dogapp.utils.DogTestUtils.generateDog;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:test-context.xml"})
+@ContextConfiguration({"classpath:context.xml", "classpath:test-context.xml"})
 public class DogServiceTest {
     @Autowired
     private DogServiceImpl dogServiceImpl;
