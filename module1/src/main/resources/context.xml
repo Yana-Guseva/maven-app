@@ -31,7 +31,8 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
         <property name="mappingResources" value="hibernate-mapping.xml"/>
         <property name="hibernateProperties">
             <props>
-                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.use_sql_comments">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
             </props>
         </property>
     </bean>
