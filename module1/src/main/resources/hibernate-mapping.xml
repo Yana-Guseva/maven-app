@@ -7,5 +7,16 @@
         <property name="dateOfBirth" type="java.time.LocalDate" column="dateOfBirth"/>
         <property name="height" type="java.lang.Double" column="height"/>
         <property name="weight" type="java.lang.Double" column="weight"/>
+        <set name="dogDetails" table="DOG_DETAILS" lazy="true">
+            <key>
+                <column name="dogId" not-null="true"/>
+            </key>
+            <one-to-many class="dogapp.dto.DogDetails"/>
+        </set>
+    </class>
+    <class name="dogapp.dto.DogDetails" table="DOG_DETAILS">
+        <id name="id" type="java.util.UUID" column="id"/>
+        <property name="dogId" type="java.util.UUID" column="dogId"/>
+        <property name="details" type="java.lang.String" column="details"/>
     </class>
 </hibernate-mapping>

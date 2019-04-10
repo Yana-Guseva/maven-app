@@ -1,12 +1,18 @@
 package dogapp.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Setter
@@ -31,4 +37,6 @@ public class Dog {
     @NotNull(message = "must not be null")
     @Positive(message = "must be greater than 0")
     private Double weight;
+
+    private Set<DogDetails> dogDetails = new HashSet<>();
 }
