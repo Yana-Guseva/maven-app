@@ -70,7 +70,6 @@ public class DogControllerMockMvcTest {
         MockHttpServletResponse response = mvc.perform(get(BASE_URL + "/" + createdDog.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(HttpStatus.OK.value()))
-                .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn()
                 .getResponse();
         Dog dog = objectMapper.readValue(response.getContentAsString(), Dog.class);

@@ -89,11 +89,11 @@ public class DogDaoTest {
         newDog.setName("");
         newDog.setWeight(Double.MIN_VALUE);
         newDog.setHeight(Double.MIN_VALUE);
-        newDog.setDateOfBirth(LocalDate.MIN);
+        newDog.setDateOfBirth(LocalDate.of(-2, 1, 1));
         Dog dog = dogDao.create(newDog);
-        newDog.setId(dog.getId());
-
-        assertReflectionEquals(newDog, dog);
+        Dog dbDog = dogDao.get(dog.getId());
+        newDog.setId(dbDog.getId());
+        assertReflectionEquals(newDog, dbDog);
     }
 
     @Test

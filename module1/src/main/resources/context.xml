@@ -3,10 +3,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
        xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
 
     <tx:annotation-driven/>
@@ -16,29 +16,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-    <aop:aspectj-autoproxy/>
-    <aop:config>
-        <aop:aspect id="transactionalAspect" ref="transactionalAspectBean">
-            <aop:pointcut id="pointcut" expression="@annotation(dogapp.aspect.Transactional)"/>
-            <aop:around pointcut-ref="pointcut" method="transactionalMethodInvoke"/>
-        </aop:aspect>
-    </aop:config>
-
     <jee:jndi-lookup id="dataSource" jndi-name="jdbc/myPostgres" expected-type="javax.sql.DataSource"/>
-
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="mappingResources" value="hibernate-mapping.xml"/>
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.use_sql_comments">true</prop>
-                <prop key="hibernate.format_sql">true</prop>
-            </props>
-        </property>
-    </bean>
-    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
 
     <bean id="dogController" class="dogapp.controller.DogController">
         <constructor-arg ref="dogServiceImpl"/>
@@ -53,10 +31,20 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
     <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
         <constructor-arg ref="flywayConfig"/>
     </bean>
-    <bean id="transactionalAspectBean" class="dogapp.aspect.TransactionalAspect">
-        <constructor-arg ref="transactionManager"/>
-    </bean>
     <beans profile="default">
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="mappingResources" value="hibernate-mapping.xml"/>
+            <property name="hibernateProperties">
+                <props>
+                    <prop key="hibernate.use_sql_comments">true</prop>
+                    <prop key="hibernate.format_sql">true</prop>
+                </props>
+            </property>
+        </bean>
+        <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+            <property name="sessionFactory" ref="sessionFactory"/>
+        </bean>
         <bean id="dogDao" class="dogapp.dao.HibernateDogDao">
             <constructor-arg ref="sessionFactory"/>
         </bean>
@@ -68,6 +56,9 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
                     <constructor-arg ref="dataSource"/>
                 </bean>
             </constructor-arg>
+        </bean>
+        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <property name="dataSource" ref="dataSource"/>
         </bean>
     </beans>
     <beans>

@@ -15,7 +15,9 @@ public class DogServiceImpl {
     @LogMe
     @Transactional
     public Dog getDog(UUID id) {
-        return dogDao.get(id);
+        Dog dog = dogDao.get(id);
+        dog.getDogDetails().size();
+        return dog;
     }
 
     @LogMe

@@ -74,6 +74,7 @@ public class HibernateDogDaoTest extends AbstractTransactionalJUnit4SpringContex
     @Test(expected = DogNotFoundException.class)
     public void shouldThrowDogNotFoundExceptionWhenUpdateNotExistingDog() {
         dogDao.update(generateDog());
+        flushAndClear();
     }
 
     @Test(expected = DogNotFoundException.class)
@@ -86,33 +87,33 @@ public class HibernateDogDaoTest extends AbstractTransactionalJUnit4SpringContex
         dogDao.delete(UUID.randomUUID());
     }
 
-//    @Test
-//    public void shouldCreateDogWithMinConstraints() {
-//        Dog newDog = generateDog();
-//        newDog.setName("q");
-//        newDog.setWeight(Double.MIN_VALUE);
-//        newDog.setHeight(Double.MIN_VALUE);
-//        newDog.setDateOfBirth(LocalDate.MIN);
-//        Dog createdDog = dogDao.create(newDog);
-//        flushAndClear();
-//        Dog dog = dogDao.get(createdDog.getId());
-//        newDog.setId(createdDog.getId());
-//        assertReflectionEquals(newDog, dog);
-//    }
-//
-//    @Test
-//    public void shouldCreateDogWithMaxConstraints() {
-//        Dog newDog = generateDog();
-//        newDog.setName(alphanumeric(100));
-//        newDog.setWeight(Double.MAX_VALUE);
-//        newDog.setHeight(Double.MAX_VALUE);
-//        newDog.setDateOfBirth(LocalDate.MAX);
-//        Dog createdDog = dogDao.create(newDog);
-//        flushAndClear();
-//        Dog dog = dogDao.get(createdDog.getId());
-//        newDog.setId(createdDog.getId());
-//        assertReflectionEquals(newDog, dog);
-//    }
+    @Test
+    public void shouldCreateDogWithMinConstraints() {
+        Dog newDog = generateDog();
+        newDog.setName("q");
+        newDog.setWeight(Double.MIN_VALUE);
+        newDog.setHeight(Double.MIN_VALUE);
+        newDog.setDateOfBirth(LocalDate.of(-2, 1, 1));
+        Dog createdDog = dogDao.create(newDog);
+        flushAndClear();
+        Dog dog = dogDao.get(createdDog.getId());
+        newDog.setId(createdDog.getId());
+        assertReflectionEquals(newDog, dog);
+    }
+
+    @Test
+    public void shouldCreateDogWithMaxConstraints() {
+        Dog newDog = generateDog();
+        newDog.setName(alphanumeric(100));
+        newDog.setWeight(Double.MAX_VALUE);
+        newDog.setHeight(Double.MAX_VALUE);
+        newDog.setDateOfBirth(LocalDate.now().minusDays(1));
+        Dog createdDog = dogDao.create(newDog);
+        flushAndClear();
+        Dog dog = dogDao.get(createdDog.getId());
+        newDog.setId(createdDog.getId());
+        assertReflectionEquals(newDog, dog);
+    }
 
     @Test
     public void shouldCreateDogWithNullDateOfBirth() {
